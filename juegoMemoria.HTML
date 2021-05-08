@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Juego de memoria</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+
+    <style>
+        body{
+            font-family: 'Nunito', sans-serif;
+
+        }
+        h1{
+            text-align: center;
+        }
+        div#tablero{
+            background:  rgb(56, 56, 56);
+            border: #333 10px solid;
+            width: 800px;
+            height: 540px;
+            padding: 24px;
+            margin: 2em auto;
+        }
+        div#tablero>div{
+            background-color: #eee;
+            background-image: url(icon.jpg);
+            background-size: cover;
+            border: #000 1px solid;
+            width: 107px;
+            height: 107px;
+            float: left;
+            margin: 10px;
+            padding: 20;
+            font-size: 60px;
+            font-weight: bold;
+            cursor: pointer
+            text-align: center;
+
+        }
+    
+
+    </style>
+    
+    
+    <script>
+    var arrayOpciones = ["A", "A", "B", "B", "C", "C", "D", "D", "E", "E", "F", "F", "G", "G", "H", "H", "I", "I", "J", "J", "K", "K", "L", "L"];
+    var valoresCartas = [];
+    var idCartas = [];
+    var cartasAdivinadas = 0;
+    
+    // metodo fisher yates para mezclar un array
+    Array.prototype.mezclar = function () {
+        var i = this.length;
+        var indiceAleatorio;
+        var valorTemporal;
+        
+        while (--i > 0) {
+        indiceAleatorio = Math.floor(Math.random() * (i + 1));
+        valorTemporal = this[indiceAleatorio];
+        this[indiceAleatorio] =this [i];
+        this[i] = valorTemporal;
+        };
+    
+    
+    };
+    
+    
+    // funcion para crear un nuevo tablero
+    function nuevoTablero() {
+        cartasAdivinadas = 0;
+        var codigoHtml = '';
+        arrayOpciones.mezclar();
+        for (var i = 0; i < arrayOpciones.length; i++) {
+            codigoHtml += '<div id= "carta_' + i + '" onclick="girarCarta(this, \'' +arrayOpciones[i] + '\')"></div>'
+        }
+        document.getElementById("tablero").innerHTML = codigoHtml;
+
+    };
+
+    // Funcion del juego!
+    function girarCarta(carta, val){
+        if(carta.innerHTML == "" && valoresCartas.length < 2) {
+            carta.style.background = "#fff";
+            carta.innerHTML = val;
+            
+            // codigo para ejecutar dar vuelta laprimera carta
+            if (valoresCartas.length === 0) {
+                valoresCartas.push(val);
+                idCartas.push(carta.id)
+               
+
+                  // codigo para ejecutar dar vuelta la segunda carta
+
+            } else if (valoresCartas.length === 1) {
+            valoresCartas.push(val);
+            idCartas.push(carta.id);
+            
+
+            // comprobamos si las cartas son iguales
+
+            if (valoresCartas [0] === valoresCartas[1]) {
+                cartasAdivinadas +=2;
+                // limpiamos variables (arrays)
+                valoresCartas = [];
+                idCartas = [];
+
+                // comprobar si terminamos el juego
+                if (cartasAdivinadas === arrayOpciones.length) {
+                    alert("GANASTE!... Creando un nuevo tablero");
+                    document.getElementById("tablero"). innerHTML = "";
+                    nuevoTablero();
+
+                }
+            }
+
+            }
+
+          
+        } else {
+            function ocultarCarta(){
+                // girar carta y volver a mostrar la imagen
+                var carta_1 = document.getElementById(idCartas[0]);
+                var carta_2 = document.getElementById(idCartas[1]);
+
+
+                // añadimos estilos cuando ocultamos carta 1
+                carta_1.style.backgroundSize = "#EEE";
+                carta_1.style.backgroundImage = "url(icon.jpg)";
+                carta_1.style.backgroundSize = "cover";
+                carta_1.innerHTML = "";   
+                
+                 // añadimos estilos cuando ocultamos carta 
+                carta_2.style.backgroundSize = "#EEE";
+                carta_2.style.backgroundImage = "url(icon.jpg)";
+                carta_2.style.backgroundSize = "cover";
+                carta_2.innerHTML = "";
+
+                 // limpiamos variables (arrays)
+                 valoresCartas = [];
+                idCartas = [];
+
+            }
+            setTimeout(ocultarCarta, 500);
+        }
+    }; 
+   
+
+    </script>
+</head>
+<body>
+    <div class="content">
+        <h1>JUEGO DE MEMORIA</h1>
+        <div id= "tablero"> </div>
+        <hr>
+
+
+
+
+    </div>
+
+
+    <script>nuevoTablero();</script>
+    
+</body>
+</html>
